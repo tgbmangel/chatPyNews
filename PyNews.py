@@ -8,6 +8,7 @@
 import itchat
 import tkinter as tk
 from PIL import Image,ImageTk
+from tkinter import ttk
 import os
 import math
 import threading
@@ -25,7 +26,7 @@ class ChatPy():
         self.root = tk.Tk()
         self.root.title(u'微信助手')
         self.root.iconbitmap('{}/{}'.format(self.res_path,self.iconico))
-        self.root.geometry('300x100')
+        self.root.geometry('800x600')
         self.gui_grid()
         self.run_gui()
 
@@ -47,9 +48,10 @@ class ChatPy():
         self.user_name_value_lable.config(text=u'已退出',font=('黑体',10))
         self.login_button.config(state='normal', text='登录')
     def mix_logo(self):
-        self.mix_logo_button.config(text=u'请稍等...', state='disable')
-        t1 = threading.Thread(target=self.get_head_image)
-        t1.start()
+        pass
+    #     self.mix_logo_button.config(text=u'请稍等...', state='disable')
+    #     t1 = threading.Thread(target=self.get_head_image)
+    #     t1.start()
     def get_firends_list(self)->list:
         return itchat.get_friends()
     def get_myself_info(self)->list:
@@ -71,19 +73,20 @@ class ChatPy():
     def send_news(self):
         itchat.send(get_news(), get_chatroom_username(u'经济研讨'))
     def gui_grid(self):
+        #login_frame
         self.lab_bg = self.get_res_image(self.res_path, self.bg_image_name, 300, 100)
         login_frame=tk.LabelFrame(
             self.root,
             width=300,
             height=100,
-            relief='flat'
+            relief='groove'
         )
         bg_label=tk.Label(login_frame,image=self.lab_bg)
         user_name_lable = tk.Label(
             login_frame,
-            text=u'头像越多时间越长!',
-            fg='red',
-            font=('黑体','10')
+            text=u'您好：',
+            fg='gray',
+            font=('黑体','12')
         )
         self.default_image=self.get_head_img_50x50(self.res_path,self.default_user_log)
         self.head_image_lable=tk.Label(
@@ -117,16 +120,38 @@ class ChatPy():
             text=u'发新闻',
             command=self.send_news
         )
+        #好友列表 firends_frame
+        firends_frame = tk.LabelFrame(
+            self.root,
+            width=300,
+            height=500,
+            relief='groove',
+            bg='#CCCCCC'
+        )
+        self.firends_tree=ttk.Treeview(firends_frame,show='headings')
+        self.firends_tree['columns'] = ['nickname', 'nicknick', 'age']
+        self.firends_tree.column('nickname', width=70)
+        self.firends_tree.column('nicknick', width=70)
+        self.firends_tree.column('age', width=70)
+        self.firends_tree.heading('nickname', text='昵称')
+        self.firends_tree.heading('nicknick', text='备注')
+        self.firends_tree.heading('age', text='年龄')
         #ui grid
-        login_frame.grid(row=0, column=0)
+        #frame grid
+        login_frame.grid(row=0, column=0,sticky=tk.W,padx=5, pady=5)
+        firends_frame.grid(row=1,column=0)
+        #login_frame
         bg_label.place(x=0,y=0)
-        # user_name_lable.place(x=0, y=0)
+        user_name_lable.place(x=0, y=0)
         self.user_name_value_lable.place(x=52, y=40)
         # self.mix_logo_button.place(x=175, y=0,width=60,height=20)
         self.login_button.place(x=255, y=0,width=40, height=20)
         self.head_image_lable.place(x=0,y=40,width=50,height=50)
         self.login_out_button.place(x=255, y=20,width=40, height=20)
         self.send_new_button.place(x=255, y=40,width=40, height=20)
+        #firends_frame
+        self.firends_tree.place(x=0,y=0,width=290)
+
     def close_window(self):
         # messagebox.showinfo('info','window close')
         try:

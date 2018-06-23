@@ -53,6 +53,7 @@ class ChatPy():
         self.mix_logo_button.config(state='normal')
         self.login_button.config(state='disable',text='已登录')
         self.login_out_button.config(state='normal')
+        self.deltree(self.send_firends_tree)
         self.show_firends()
         self.show_chatrooms()
     def login_out(self):
@@ -119,6 +120,7 @@ class ChatPy():
             print('ad text null')
     def show_firends(self):
         firends_all_list=self.get_all_firends_list()
+        self.deltree(self.firends_tree)
         for frd in firends_all_list:
             sex='其他'
             if frd['Sex']==2:

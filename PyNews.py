@@ -14,6 +14,7 @@ import math
 import time
 import threading
 from tkinter import messagebox
+import unicodedata
 
 class ChatPy():
     def __init__(self):
@@ -118,6 +119,26 @@ class ChatPy():
         else:
             messagebox.showinfo('提示', '请输入信息内容')
             print('ad text null')
+    def unicode_nickname(self,input_string):
+        print(input_string)
+        strrr=ascii(input_string)
+        b=''
+        if 'U000' in strrr:
+            str_list = strrr.split('\'')[1].split('\\')
+            for x in str_list:
+                print(x)
+                if 'U000' in x:
+                    pass
+                elif not x:
+                    pass
+                else:
+                    a = '\\{}'.format(x)
+                    b=b+a
+            final_str=b.encode('utf-8').decode('unicode_escape')
+            return final_str
+        else:
+            return input_string
+
     def show_firends(self):
         firends_all_list=self.get_all_firends_list()
         self.deltree(self.firends_tree)
@@ -129,12 +150,15 @@ class ChatPy():
                 sex='男'
             frd_div=(frd['UserName'],frd['NickName'],frd['RemarkName'],sex)
             print(frd_div)
+            # self.firends_tree.insert('', 'end', values=frd_div)
             try:
                 self.firends_tree.insert('','end',values=frd_div)
-            except Exception as e:
-                nick_name=frd['NickName'].encode('utf8')
-                frd_div = (frd['UserName'],nick_name, frd['RemarkName'], sex)
+            except tk._tkinter.TclError:
+                nick_name=self.unicode_nickname(frd['NickName'])
+                remark_name=self.unicode_nickname(frd['RemarkName'])
+                frd_div = (frd['UserName'],nick_name,remark_name, sex)
                 self.firends_tree.insert('', 'end', values=frd_div)
+            except Exception as e:
                 print(e)
         self.firends_number_label.config(text='好友数：{}'.format(len(self.firends_tree.get_children())))
     def show_chatrooms(self):
@@ -148,11 +172,13 @@ class ChatPy():
             chat_rooom=chtroom['UserName'],chtroom['NickName']
             try:
                 self.qun_list_tree.insert('', 'end', values=chat_rooom)
-            except Exception as e:
-                nick_name=chtroom['NickName'].encode('utf8')
-                chat_rooom = (chtroom['UserName'],nick_name)
+            except tk._tkinter.TclError:
+                nick_name = self.unicode_nickname(chtroom['NickName'])
+                chat_rooom = (chtroom['UserName'], nick_name)
                 self.qun_list_tree.insert('', 'end', values=chat_rooom)
+            except Exception as e:
                 print(e)
+
     def deltree(self,tree_view):
         '''
         清空treeview
@@ -288,6 +314,11 @@ class ChatPy():
             firends_frame,
             text='好友数：'
         )
+        self.firends_fresh_button=tk.Button(
+            firends_frame,
+            text='f',
+            command=self.show_firends
+        )
         #######################################################
         #send_list_frame
         send_firends_frame = tk.LabelFrame(
@@ -406,6 +437,7 @@ class ChatPy():
         self.firends_tree.place(x=0,y=0,width=270)
         scroll.place(x=270,y=0,height=466)
         self.firends_number_label.place(x=0,y=466)
+        self.firends_fresh_button.place(x=50,y=466)
         #send_list_frame
         send_list_label.place(x=0,y=0)
         ad_label.place(x=290,y=0)
@@ -425,7 +457,7 @@ class ChatPy():
     def close_window(self):
         # messagebox.showinfo('info','window close')
         try:
-            # itchat.logout()
+            itchat.logout()
             pass
         except Exception as e:
             pass

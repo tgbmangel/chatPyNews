@@ -57,6 +57,8 @@ class ChatPy():
         self.deltree(self.send_firends_tree)
         self.show_firends()
         self.show_chatrooms()
+        self.firends_fresh_button.config(state='normal')
+        self.fresh_chatrooms_button.config(state='normal')
     def login_out(self):
         itchat.logout()
         self.user_name_value_lable.config(text=u'已退出',font=('黑体',10))
@@ -120,13 +122,11 @@ class ChatPy():
             messagebox.showinfo('提示', '请输入信息内容')
             print('ad text null')
     def unicode_nickname(self,input_string):
-        print(input_string)
         strrr=ascii(input_string)
         b=''
         if 'U000' in strrr:
             str_list = strrr.split('\'')[1].split('\\')
             for x in str_list:
-                print(x)
                 if 'U000' in x:
                     pass
                 elif not x:
@@ -316,8 +316,9 @@ class ChatPy():
         )
         self.firends_fresh_button=tk.Button(
             firends_frame,
-            text='f',
-            command=self.show_firends
+            text='刷新列表',
+            command=self.show_firends,
+            state='disable'
         )
         #######################################################
         #send_list_frame
@@ -410,7 +411,8 @@ class ChatPy():
         self.fresh_chatrooms_button=tk.Button(
             qun_frame,
             text='刷新群',
-            command=self.show_chatrooms
+            command=self.show_chatrooms,
+            state='disable'
         )
         self.send_chat_room_button=tk.Button(
             qun_frame,
@@ -437,7 +439,7 @@ class ChatPy():
         self.firends_tree.place(x=0,y=0,width=270)
         scroll.place(x=270,y=0,height=466)
         self.firends_number_label.place(x=0,y=466)
-        self.firends_fresh_button.place(x=50,y=466)
+        self.firends_fresh_button.place(x=150,y=466)
         #send_list_frame
         send_list_label.place(x=0,y=0)
         ad_label.place(x=290,y=0)

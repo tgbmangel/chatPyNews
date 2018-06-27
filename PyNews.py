@@ -136,6 +136,7 @@ class ChatPy():
                 frd_div = (frd['UserName'],nick_name, frd['RemarkName'], sex)
                 self.firends_tree.insert('', 'end', values=frd_div)
                 print(e)
+        self.firends_number_label.config(text='好友数：{}'.format(len(self.firends_tree.get_children())))
     def show_chatrooms(self):
         '''
         展示群列表
@@ -283,6 +284,10 @@ class ChatPy():
         self.firends_tree.heading(cl1, text='昵称')
         self.firends_tree.heading(cl2, text='备注名')
         self.firends_tree.heading(cl3, text='性别')
+        self.firends_number_label=tk.Label(
+            firends_frame,
+            text='好友数：'
+        )
         #######################################################
         #send_list_frame
         send_firends_frame = tk.LabelFrame(
@@ -400,6 +405,7 @@ class ChatPy():
         #firends_frame
         self.firends_tree.place(x=0,y=0,width=270)
         scroll.place(x=270,y=0,height=466)
+        self.firends_number_label.place(x=0,y=466)
         #send_list_frame
         send_list_label.place(x=0,y=0)
         ad_label.place(x=290,y=0)
